@@ -3,6 +3,7 @@ const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
+const apiCall = require('./apiCall')
 
 const app = express();
 app.use(cors());
@@ -48,6 +49,9 @@ io.on('connection', (socket) => {
     console.log('Usuario desconectado:', socket.id);
   });
 });
+
+app.use('/', apiCall)
+
 
 const PORT = process.env.PORT || 3001;
 server.listen(PORT, () => {
