@@ -1,7 +1,7 @@
+require("dotenv").config();
 const express = require('express');
 const axios = require('axios');
 const router = express.Router();
-require("dotenv").config();
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 
 
