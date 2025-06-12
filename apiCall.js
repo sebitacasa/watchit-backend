@@ -2,7 +2,7 @@ const express = require('express');
 const axios = require('axios');
 const router = express.Router();
 require("dotenv").config();
-const API_KEY = process.env;
+const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 
 
 
@@ -18,7 +18,7 @@ router.get('/youtube-search', async (req, res) => {
           q: searchQuery,
           type: 'video',
           maxResults: 10,
-          key: API_KEY,
+          key: YOUTUBE_API_KEY
         },
       }
     );
