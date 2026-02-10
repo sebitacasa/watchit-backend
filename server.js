@@ -47,15 +47,17 @@ io.on('connection', (socket) => {
     } else {
       // Si está solo en la sala, le damos luz verde para empezar desde 0
       console.log(`🟢 Usuario ${socket.id} es el primero. Inicia en 0.`);
-      io.to(socket.id).emit('set-time', { time: 0, state: -1 }); 
+      // Nota: Aquí podrías enviar un videoId por defecto si quisieras, o null
+      io.to(socket.id).emit('set-time', { time: 0, state: -1, videoId: null }); 
     }
   });
 
-  // 2. El "Veterano" responde con la hora actual
-  socket.on('sync-response', ({ requesterId, time, state }) => {
-    console.log(`✅ Sync recibido. Enviando a ${requesterId}: Tiempo ${time}s`);
-    // Se lo enviamos SOLAMENTE al usuario que lo pidió
-    io.to(requesterId).emit('set-time', { time, state });
+  // 2. El "Veterano" responde con la hora actual Y EL VIDEO
+  // CORRECCIÓN AQUÍ: Agregamos videoId
+  socket.on('sync-response', ({ requesterId, time, state, videoId }) => {
+    console.log(`✅ Sync recibido. Enviando a ${requesterId}: Video ${videoId} - Tiempo ${time}s`);
+    // Se lo enviamos SOLAMENTE al usuario que lo pidió, pasando el videoId
+    io.to(requesterId).emit('set-time', { time, state, videoId });
   });
 
   // --- FIN LÓGICA DE SINCRONIZACIÓN ---
@@ -68,8 +70,7 @@ io.on('connection', (socket) => {
 
   // Cambio de video
   socket.on('change-video', ({ roomId, videoId }) => {
-    // Esto se envía a TODOS en la sala (incluido el sender, opcionalmente, o usar io.in)
-    // Usamos io.in para asegurar que todos cambien, incluido quien clickeó si es necesario
+    // Esto se envía a TODOS en la sala
     io.in(roomId).emit('change-video', { videoId });
   });
 
